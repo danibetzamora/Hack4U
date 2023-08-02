@@ -1,0 +1,53 @@
+Comandos y Shorcuts usados en entorno Bspwm y Linux
+
+	windows + d -> Ejecuta rofi (buscador de programas)
+
+	windows + shift + f -> Abrir Firefox
+
+	windows + enter -> Abre consola
+
+	windows + q -> Cierra consola (Por defecto es windows + w)
+
+	windows + flechas -> Cambia entre terminales 
+
+	windows + números -> Cambia entre espacios de trabajo
+
+	ctrl + shift + enter -> Abrir una consola rápida en la propia terminal
+	
+	ctrl + shift + w -> Cerrar la consola rápida de la propia terminal (o escribir exit)
+	
+	ctrl + shift + z -> Hace zoom a una consola que está en una terminal (si se vuelve a hacer quita el zoom)
+
+	ctrl + shift + t -> Formato Powerline (Crea sesiones como tmux en una terminal)
+
+		ctrl + shift + flechas -> Cambiar entre sesiones (también se puede hacer pinchando en ellas)
+		
+		ctrl + shift + alt + t -> Renombrar sesión
+
+	windows + alt + flechas -> Cambia tamaño de la terminal
+
+	windows + s -> Ventana flotante
+
+		mantener windows + click izquierdo -> Mover ventana flotante
+
+		mantener windows + click derecho -> Resize de la ventana flotante
+
+	windows + t -> Devolver la terminal a tamaño normal
+	
+	ctrl + windows + alt + flechas -> Preselectores
+
+	ctrl + windows + alt + espacio -> Cancelar preselector
+
+	ctrl + windows + numeros -> Preselectores horizontales de distintos tamaños
+
+	windows + escape -> Recarga los ficheros de configuración de sxhkd (cuando se modifican comandos)
+
+	windows + shift + {q,r} -> Quita o Reinicia Bspwm
+
+
+Comandos Útiles Linux y Kitty
+
+	kill -9 -1 -> Mata los procesos y lleva a la pantalla de iniciar sesión
+
+	kitty +kitten icat fondo.png -> Mostrar imagen en terminal
+	

@@ -1,0 +1,43 @@
+DIRECCIONES IP (IPV4 e IPV6)
+
+	Dirección IPV4 = 32 bits = 4 octetos de 8 bits
+
+	Número de direcciones IPV4 diferentes = 2^32 = 4 mil millones (echo "2^32" | bc)
+
+		Insuficientes direcciones para todo el mundo (de ahí nace la necesidad de IPV6)
+
+	Dirección IPV6 = 128 bits = 8 conjuntos de 16 bits en hexadecimal 
+
+	Ejemplo de Dirección IPV4 -> 192.168.111.42
+
+	Ejemplo de Dirección IPV6 -> 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+	
+	Obtener IP de la máquina en Linux -> "ifconfig", "hostname -I"
+
+	Obtener la Dirección IP en binario en terminal -> echo "$(echo "obase=2; 192" | bc).168.111.42"
+
+		Resultado -> 11000000.168.111.42
+
+
+DIRECCIONES MAC
+
+	Dirección MAC = Dirección Física -> Es "única" para cada dispositivo
+
+	Ejemplo de dirección MAC -> 00:0c:29:e1:6d:92 -> 12 Dígitos = 6 bytes = 48 bits de dirección
+
+	Las direcciones MAC se dividen en dos:
+
+		- Primeros 3 bytes -> Identificador Único Organizacional (OUI)
+
+		- Últimos 3 bytes -> Controlador de Interfaz de Red (NIC)
+
+	Los primeros 3 bytes (24 bits) representan el fabricante de la tarjeta, y los últimos 3 bytes (24 bits) identifican la tarjeta 	particular de ese fabricante. Cada grupo de 3 bytes se puede representar con 6 dígitos hexadecimales, formando un número 	hexadecimal de 12 dígitos que representa la MAC completa.
+
+	macchanger -> Herramienta usada para cambiar la dirección MAC o listar los diferentes OUI asignados a los proveedores
+
+		macchanger -l -> Lista todos los OUI asociados a los proveedores
+	
+	
+
+	
