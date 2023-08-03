@@ -1,4 +1,4 @@
-Comandos y Shorcuts usados en entorno Bspwm y Linux
+Shortcuts Bspwm y Sxhkd
 
 	windows + d -> Ejecuta rofi (buscador de programas)
 
@@ -12,6 +12,37 @@ Comandos y Shorcuts usados en entorno Bspwm y Linux
 
 	windows + números -> Cambia entre espacios de trabajo
 
+	windows + shift + números -> Mueve la ventana seleccionada al espacio de trabajo indicado en el número
+
+	windows + alt + flechas -> Cambia tamaño de la terminal
+
+	windows + s -> Ventana flotante
+
+		mantener windows + click izquierdo -> Mover ventana flotante
+
+		mantener windows + click derecho -> Resize de la ventana flotante
+
+	windows + t -> Devolver la terminal a tamaño normal
+	
+	windows + ctrl + alt + flechas -> Preselectores
+
+	windows + ctrl + alt + espacio -> Cancelar preselector
+
+	windows + ctrl + numeros -> Preselectores de distintos tamaños
+
+	windows + escape -> Recarga los ficheros de configuración de sxhkd (cuando se modifican comandos)
+
+	windows + shift + {q,r} -> Quita o Reinicia Bspwm
+
+	windows + shift + g -> Hacer captura de pantalla
+
+	windows + shift + x -> Bloquea la pantalla (con i3lock)
+
+
+Shortcuts Kitty
+
+	kitty +kitten icat fondo.png -> Mostrar imagen en terminal
+
 	ctrl + shift + enter -> Abrir una consola rápida en la propia terminal
 	
 	ctrl + shift + w -> Cerrar la consola rápida de la propia terminal (o escribir exit)
@@ -24,30 +55,56 @@ Comandos y Shorcuts usados en entorno Bspwm y Linux
 		
 		ctrl + shift + alt + t -> Renombrar sesión
 
-	windows + alt + flechas -> Cambia tamaño de la terminal
+	ctrl + shift + r -> Cambiar tamaño de la consola abierta en la terminal de kitty
 
-	windows + s -> Ventana flotante
-
-		mantener windows + click izquierdo -> Mover ventana flotante
-
-		mantener windows + click derecho -> Resize de la ventana flotante
-
-	windows + t -> Devolver la terminal a tamaño normal
+		W -> Wider
 	
-	ctrl + windows + alt + flechas -> Preselectores
+		N -> Narrowe
 
-	ctrl + windows + alt + espacio -> Cancelar preselector
+		T -> Taller
 
-	ctrl + windows + numeros -> Preselectores horizontales de distintos tamaños
+		S -> Shorter
 
-	windows + escape -> Recarga los ficheros de configuración de sxhkd (cuando se modifican comandos)
+		R -> Reset
 
-	windows + shift + {q,r} -> Quita o Reinicia Bspwm
+	ctrl + shift + u -> Abre una consola de hexadecimales (se pega un hexadecimal, se le da a enter, y sale el icono)
 
 
-Comandos Útiles Linux y Kitty
+Funciones Personalizadas zshrc (Polybar)
 
-	kill -9 -1 -> Mata los procesos y lleva a la pantalla de iniciar sesión
+	settarget Mantis 10.10.1.15 -> Declara objetivo indicando nombre de la máquina e IP
 
-	kitty +kitten icat fondo.png -> Mostrar imagen en terminal
+	cleartarget -> Borra el objetivo del módulo de la polybar
+
+
+Alias Definidos
+
+	cat -> Es un bat, con cuadrículas y paginación
+
+	catn -> Es el bat sin cuadrículas pero con paginación
+
+	catnp -> Es el bat como un cat normal (sin cuadrículas ni paginación)
+
+	ctrl + alt + selección con ratón -> Selecciona respetando la columna en la que se está
+
+
+### Notas Extra ###
+
+locate fichero -> Da todas las rutas del sistema que contengan dicho nombre
+
+kill -9 -1 -> Mata los procesos y lleva a la pantalla de iniciar sesión
+
+Escribir cat + ctrl + t -> Puedes escribir el nombre de un fichero y te salen todas las opciones del sistema para escoger
+
+nvim -> Nuevo editor de texto
+
+ranger -> Programa que permite visualizar de forma gráfica los directorios
+
+i3lock-fancy -> Bloqueador de pantalla
+
+escibir cualquier comando + doble esc -> Añade sudo al inicio del comando (plugin)
+
+
+
+
 	
