@@ -1,0 +1,92 @@
+NMAP
+
+	* NMAP por defecto escanea mediante el protocolo TCP *
+
+	route -n -> Da información de la red (router, network ID, netmask...)
+
+	nmap 192.168.1.1 -> Escanea los puertos más comunes de la dirección IP indicada
+
+	nmap -p22 192.168.1.1 -> Escanea el puerto 22 de la dirección IP
+
+	nmap -p1-100 192.168.1.1 -> Escanea en el rango de los 100 primeros puertos
+
+	nmap -p- 192.168.1.1 -> Escanea el rango de puertos entero
+
+	nmap --top-ports 500 192.168.1.1 -> Escanea los 500 puertos más comunes
+	
+		Tipos de puerto -> Abierto, Cerrado, Filtrado (No se sabe si está abierto o filtrado)
+
+	nmap --top-ports 500 --open 192.168.1.1 -> Reporta únicamente los puertos que están abiertos
+
+	nmap -p- --open 192.168.1.1 -> Escaneo de todos los puertos que están abiertos (va algo más rápido)
+
+	nmap -p- --open 192.168.1.1 -v -> Con el -v se le indica que sea "verbose", es decir, que vaya dando información 
+
+	nmap -p- --open 192.168.1.1 -v -n -> Con el -n le indicamos que no haga resolución DNS para agilizar el escaneo
+	
+	nmap -p- --open -T5 192.168.1.1 -v -n -> T5 (modo insane) hace que el escaneo sea mucho más rápido pero menos fiable
+
+		El parámetro -T hace uso de 6 plantillas distintas de escaneo (desde la 0 a la 5)
+
+		Cada plantilla hace escaneos distintos en cuanto a velocidad, rendimiento, eficacia, sigilo...
+
+	nmap -p- -T5 --open 192.168.1.1 -v -n -Pn -> Con Pn se da por hecho que el host esta activo (no se aplica resolución ARP)
+
+	nmap -p22 -sT --open 192.168.1.1 -v -n -> Escaneo TCP Connect (Completa la conexión TCP)(Existen más tipos de escaneos)
+
+	nmap -p- --open -sS --min-rate 5000 -v -n -Pn 192.168.1.1 -> Escaneo SYN (No termina la conexión, manda un SYN, recibe un SYN/ACK, y manda un RST)
+
+		Es más sigiloso y no deja rastro (al no terminar la conexión, los firewalls no almacenan logs)
+
+		--min-rate es para indicarle que debe tramitar a una velocidad no más lenta que 5000 paquetes por segundo
+
+	nmap -sn 192.168.1.0/24 -> Para analizar los activos existentes en la red
+
+	nmap -sn 192.168.1.0/24 | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' -> Expresión regular solo para obtener las IP
+
+	nmap -O 192.168.1.64 -> Da información sobre el sistema operativo y las versiones del host
+
+	nmap -p22,80 -sV 192.168.1.1 -> sV da información sobre la versión y el servicio que corre en los puertos del host
+
+
+NMAP - EVASIÓN DE FIREWALLS
+
+	nmap -p22 192.168.1.1 -f -> Fragmenta los paquetes enviados
+
+	nmap -p22 192.168.1.1 -D 192.168.1.215 -> Spoofea un dirección IP para que también envíe paquetes (hay direcciones IP bloqueadas por los firewalls)
+
+	nmap -p22 --open --source-port 53 -T5 -v -n 192.168.1.1 -> Se le indica el puerto de origen (los firewalls conocen los puertos usados por nmap)
+
+	nmap -p22 192.168.1.1 --data-length 21 -> Cambiar el tamaño del paquete enviado (los firewalls saben los tamaños usados por nmap)
+
+		El tamaño base usado por nmap es 58 para los paquetes SYN, al indicar 21, el tamaño del paquete enviado será de 79 (58 + 21)
+
+	nmap -p22 192.168.1.1 --spoof-mac 00:11:22:33:44:55 -Pn -> Falsifica la MAC
+	
+
+ANÁLISIS DE RED
+
+	iwconfig -> Muestra las interfaces de red disponibles
+
+	tcpdump -i ens33 -w captura.cap -v -> Herramienta usada para capturar los paquetes enviados y recibidos en la red
+
+		Con -i se le indica la interfaz de red que va a ser analizada				  
+
+		Con -w se le indica el fichero en el que se va a escribir la información capturada
+
+	wireshark captura.cap &>/dev/null & disown -> Con wireshark se analiza la captura de paquetes recién realizada
+
+		Con &>/dev/null se le indica que rediriga todas las salidas para que no se muestren por terminal
+
+		Con disown se le indica que sea un proceso a parte (no se cierra si se cierra la terminal)
+
+	* En wireshark * -> tcp.port == 22 -> Filtra por las conexiones por TCP en el puerto 22
+
+	* En wireshark * -> ip.flags.mf == 1 -> Filtro para buscar por paquetes fragmentados (Los no fragmentados serían con un 0)	
+
+	* En wireshark * -> ip.dst == 192.168.1.1 / ip.src == 192.168.1.1 -> Indicar IP de origen o de destino
+
+	arp-scan -I ens33 --localnet -> Manera de sacar equipos conectados a la red
+
+
+	

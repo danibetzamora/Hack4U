@@ -146,7 +146,6 @@ SUBNETTING
 		Esta es la dirección a la que se enviarán los paquetes para llegar a todos los hosts de la subred
 
 	
-
 	TIPOS DE MÁSCARAS DE RED
 
 	Clase A: Usan Netmask de 255.0.0.0 y tienen de 0 a 127 como su primer octeto -> 10.52.36.11
@@ -155,6 +154,14 @@ SUBNETTING
 
 	Clase C: Usan Netmask de 255.255.255.0 y tienen de 192 a 223 como su primer octeto -> 192.168.123.132
 	
+
+	Usar terminal para pasar de decimal a binario y viceversa
+
+		echo "obase=2;127" | bc -> obase = output base, se le indica que es en base binaria (2), y se le pasa el número decimal
+
+			También se puede ejecutar calculadora (bc), ponerla en binaria (obase=2), e introducir números
+
+		echo "ibase=2;1010" | bc -> Devuelve el número en decimal
 	
 
 	
