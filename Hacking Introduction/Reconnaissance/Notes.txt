@@ -62,7 +62,42 @@ NMAP - EVASIÓN DE FIREWALLS
 		El tamaño base usado por nmap es 58 para los paquetes SYN, al indicar 21, el tamaño del paquete enviado será de 79 (58 + 21)
 
 	nmap -p22 192.168.1.1 --spoof-mac 00:11:22:33:44:55 -Pn -> Falsifica la MAC
+
+
+NMAP - SCRIPTS
+
+	locate .nse -> Localización de todos los scripts usados por nmap y escritos en lua
+
+	nmap -p22 192.168.1.1 -sCV -> Escanea el servicio y la versión del puerto, además de lanzar una serie de scripts de nmap para obtener información
+
+		De esta manera se están lanzando un conjunto de scripts comunes, de entre los más de 600 scripts disponibles en nmap
+
+		http-robots -> Script de detección de directorios de una web
 	
+	* Existen varias categorías en los scripts de nmap *
+		
+		locate .nse | xargs grep "categories" -> Manera de ver las categorías de cada uno de los scripts (xargs ejecuta instrucciones en paralelo)
+
+		locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u -> Visualización de todas las categorías disponibles (hay 14 distintas)
+
+	nmap -p22 192.168.1.1 --script="vuln and safe" -> Lanzamiento de scripts que presenten la categoría de "vuln" y la de "safe"
+
+	*** Prueba de scripts en servidor local ***
+
+		python3 -m http.server 80 -> Forma de montar rápidamente un servicio http
+
+		lsof -i:80 -> Indica el servicio que está corriendo por un puerto
+
+		pwdx 16265 -> Forma de ver en que directorio se está ejecutando un proceso (se indica el PID)
+
+		nmap -p80 192.168.1.64 --script http-enum -> Script de enumeración de directorios en una web (fuzzing)
+		
+		tcpdump -i lo -w captura.cap -v -> Interceptamos todo el tráfico en loopback (son solicitudes a nuestro propio servidor)
+
+		tshark -r captura.cap 2>/dev/null -> Como wireshark pero en terminal
+
+		tshark -r captura.cap -Y "http" 2>/dev/null -> Se filtra por protocolo (peticiones http)
+
 
 ANÁLISIS DE RED
 
