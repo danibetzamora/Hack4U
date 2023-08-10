@@ -99,6 +99,11 @@ NMAP - SCRIPTS
 		tshark -r captura.cap -Y "http" 2>/dev/null -> Se filtra por protocolo (peticiones http)
 
 
+MASSCAN
+
+	masscan -p21,22,445,8080,80,443 -Pn 192.168.0.0/16 --rate=10000 -> Herramienta de escaneo parecida a nmap
+
+
 ANÁLISIS DE RED
 
 	iwconfig -> Muestra las interfaces de red disponibles
