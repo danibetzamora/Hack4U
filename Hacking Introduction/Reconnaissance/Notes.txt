@@ -129,4 +129,64 @@ ANÁLISIS DE RED
 	arp-scan -I ens33 --localnet -> Manera de sacar equipos conectados a la red
 
 
+DESCUBRIMIENTO DE CORREOS DE UN DOMINIO
+
+	https://hunter.io/ -> Se introduce un dominio y se obtienen correos
+
+	https://intelx.io/	
+
+	https://phonebook.cz/
+
+
+RECONOCIMIENTO DE IMÁGENES
+
+	https://pimeyes.com/en
+
+
+ENUMERACIÓN DE SUBDOMINIOS
+
+	pip3 ctfr.py -d google.com -> Enumera subdominios de forma pasiva (No aplica fuerza bruta ni hace peticiones)
+
+		La utilidad se encuentra clonada en el directorio /opt
+
+	gobuster vhost -u https://youtube.com -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -t 20
+
+		Enumeración activa de subdominios aplicando fuerza bruta
+
+		Con vhost se le indica que se van a enumerar subdominios
+
+		Con -u "url" se indica el target a enumerar
+
+		Con -w se le indica un diccionario con el que aplicar fuerza bruta
+
+		Con -t 20 se le indica que se ejecute en 20 hilos paralelos para agilizar el proceso
+
+	wfuzz -c -t 20 -w /usr/share/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -H "Host: FUZZ.google.com" https://google.com
+
+		Enumeración activa de subdominios aplicando fuerza bruta
+		
+		Con -c se aplican colores al output
+
+		-H "Host: FUZZ.google.com" -> De esta manera se le indica con la palabra "FUZZ" en que parte del dominio se usa el payload
+
+		Con --hc=403 -> Se oculta el código de estado y se muestran todos los demás (Hide Code)
+
+		Con --sc=200 -> Se muestran únicamente subdominios con este código de estado (Show Code)
+
+
+BRECHAS DE SEGURIDAD Y CREDENCIALES
+
+	https://www.dehashed.com/ -> Web en la que se pueden encontrar credenciales (introduciendo dominios)
+
+
+IDENTIFICACIÓN DE TECNOLOGÍAS WEB
+
+	whatweb -> Herramienta para identificar las tecnologías presentes detrás de una web (tabién identifica los CMS)
+
+	whatweb https://www.ulpgc.es
+
+	wappalyzer -> add-on de Firefox que da información sobre el sitio web
+
+	https://builtwith.com/ -> Web que de forma más extensa da información sobre las páginas web buscadas
+
 	
