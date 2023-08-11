@@ -189,4 +189,29 @@ IDENTIFICACIÓN DE TECNOLOGÍAS WEB
 
 	https://builtwith.com/ -> Web que de forma más extensa da información sobre las páginas web buscadas
 
+
+FUZZING - ENUMERACIÓN DE DIRECTORIOS Y ARCHIVOS WEB
+
+	gobuster dir -u https://www.ulpgc.es/ -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 200 --add-slash -b 403,404
+
+		En este caso se usa el diccionario "directory-list-2.3-medium.txt", el cual contiene más de 200 mil entradas
+
+		El parámetro --add-slash añade una barra al final de las url
+
+		Con el parámetro -b se introducen los códigos de estado indicados en una blacklist para que no se tengan en cuenta
+
+	gobuster dir -u https://www.ulpgc.es/ -w "diccionario" -t 200 -b 403,404 -x php,html,txt 
+
+		El parámetro -x permite buscar por extensiones de archivo
+
+	gobuster dir -u https://www.ulpgc.es/ -w "diccionario" -t 50 -x html -s 200 -b ''
+
+		El parámetro -s es para que únicamente muestre urls con código de estado 200
+
+		Cuando se usa el parámetro -s se ha de usar el parámetro -b con una cadena vacía para evitar errores
+
+	wfuzz -c -t 200 -w /usr/share/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt https://miwifi.com/FUZZ
+
+		Donde pone "FUZZ" es donde se incrustará todo el payload (correspondiente al diccionario usado en este caso)
+
 	
