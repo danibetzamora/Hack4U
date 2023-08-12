@@ -1,0 +1,80 @@
+EXPLICACIONES DOCKER 
+
+	Para crear una imagen de Docker, es necesario tener un archivo Dockerfile que defina la configuración de la imagen
+
+	Algunas de las secciones más comunes en un archivo Dockerfile son:
+
+		- FROM: se utiliza para especificar la imagen base desde la cual se construirá la nueva imagen.
+		
+		- RUN: se utiliza para ejecutar comandos en el interior del contenedor, como la instalación de paquetes o la configuración del entorno.
+		
+		- COPY: se utiliza para copiar archivos desde el sistema host al interior del contenedor.
+		
+		- CMD: se utiliza para especificar el comando que se ejecutará cuando se arranque el contenedor.
+
+	Una vez que se tiene el Dockerfile, se puede utilizar el comando "docker build" para construir la imagen
+
+		docker build [opciones] ruta_al_Dockerfile
+
+		docker build -t mi_imagen:v1 ruta_al_Dockerfile -> Con -t se le puede indicar un nombre (mi_imagen) y una etiqueta (v1) a la imagen
+
+	"docker pull" es el comando que se utiliza para descargar una imagen de Docker desde un registro de imágenes
+
+		docker pull nombre_de_la_imagen:etiqueta
+
+	Durante la construcción de la imagen, Docker descargará y almacenará en caché las capas de la imagen que se han construido previamente
+
+	El comando "docker run" se utiliza para crear y arrancar un contenedor a partir de una imagen
+
+		"-d" o "–detach": se utiliza para arrancar el contenedor en segundo plano, en lugar de en primer plano
+
+		"-i" o "–interactive": se utiliza para permitir la entrada interactiva al contenedor
+
+		"-t" o "–tty": se utiliza para asignar un seudoterminal al contenedor
+
+		"–name": se utiliza para asignar un nombre al contenedor
+
+		docker run [opciones] nombre_de_la_imagen -> Comando
+
+	Se puede utilizar el comando “docker ps” para listar los contenedores que están en ejecución en el sistema
+
+		"-a" o "–all": se utiliza para listar todos los contenedores, incluyendo los contenedores detenidos
+
+		"-q" o "–quiet": se utiliza para mostrar sólo los identificadores numéricos de los contenedores
+
+	Para ejecutar comandos en un contenedor que ya está en ejecución, se utiliza el comando "docker exec" con diferentes opciones
+
+		"-i" o "–interactive": se utiliza para permitir la entrada interactiva al contenedor
+
+		"-t" o "–tty": se utiliza para asignar un seudoterminal al contenedor
+
+
+COMANDOS DOCKER
+
+	apt install docker.io -> Instala docker
+	
+	docker build -t my_first_image . -> Busca en el directorio actual el achivo Dockerfile y monta la imagen
+
+	docker build -t my_first_image:v2 . -> Si se quiere construir la imagen y etiquetarla como versión 2
+
+	docker pull debian:latest -> Descarga una imagen de los repositorios de docker
+
+	docker images -> Para ver las imágenes disponibles
+
+	docker run -dit --name myContainer my_first_image -> Crea y arranca un contenedor a partir de una imagen
+
+		Se pone en segundo plano
+
+		Se hace que sea interactivo y que se pueda usar una terminal virtual
+
+		Se le asigna un nombre
+
+		Y se le indica la imagen que deberá usar
+
+	docker run -dit --name mySecondContainer my_first_image:v2 -> Si se quiere crear un segundo contenedor con la segunda versión de la imagen
+
+	docker ps -> Lista los contenedores que están en ejecución en el sistema
+
+	docker exec -it myContainer bash -> Ejecuta el contenedor por nombre (o identificador) y ejecuta una bash
+
+	
