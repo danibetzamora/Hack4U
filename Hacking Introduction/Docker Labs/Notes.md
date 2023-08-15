@@ -37,6 +37,14 @@ Para ejecutar comandos en un contenedor que ya está en ejecución, se utiliza e
 
 - `-i` o `--interactive`: se utiliza para permitir la entrada interactiva al contenedor.
 - `-t` o `--tty`: se utiliza para asignar un pseudoterminal al contenedor.
+
+### Port Forwarding
+
+El **port forwarding** nos permitirá redirigir el tráfico de red desde un puerto específico en el host a un puerto específico en el contenedor, lo que nos permitirá acceder a los servicios que se ejecutan dentro del contenedor desde el exterior.
+
+### Monturas
+
+Las **monturas** nos permitirán compartir un directorio o archivo entre el sistema host y el contenedor, lo que será útil para guardar de forma persistente la información entre ejecuciones de contenedores y compartir datos entre diferentes contenedores.
 ## Comandos
 
 **Instalación de Docker**
@@ -59,6 +67,8 @@ Para ejecutar comandos en un contenedor que ya está en ejecución, se utiliza e
 
 	docker images
 
+- Si se añadiese el parámetro `-q` se mostrarían únicamente los identificadores de las imágenes.
+
 **Creación y arranque de un contenedor a partir de una imagen**
 
 	docker run -dit --name myContainer my_first_image
@@ -79,12 +89,45 @@ En el siguiente comando se realiza lo mismo pero se usa la segunda versión de l
 
 - Con el parámetro `-a` se listan los contenedores activos e inactivos.
 - Si únicamente se ejecuta `docker ps`, se muestran solo los contenedores activos.
-- Con `-q` se mostrarían los identificadores de los contenedores.
+- Con `-q` se mostrarían los identificadores de los contenedores activos.
 
 **Ejecución de un contenedor por nombre (o identificador)**
 
 	docker exec -it myContainer bash
 
 - Al incluir `bash` al final del comando, se le especifica que ejecute una *bash* en la terminal virtual.
+
+**Inicio de un contenedor parado**
+
+	docker start containerName
+	docker start containerID
+
+**Parada de un contenedor activo**
+
+	docker stop containerName
+	docker stop containerID
+
+**Borrado de una imagen**
+
+	docker rmi imagenID
+
+- La eliminación de una imagen eliminará también cualquier contenedor que se haya creado a partir de esa imagen.
+
+**Borrado de todas las imágenes**
+
+	docker rmi $(docker images -q)
+
+**Borrado de un contenedor**
+
+	docker rm containerID
+
+- En caso de estar "corriendo", Docker no permitirá que se borre el contenedor. En ese caso se podría usar el parámetro `--force`.
+
+**Borrado de todos los contenedores**
+
+	docker rm $(docker ps -a -q) --force
+
+- Con `$(docker ps -a -q)` se muestran todos los identificadores de todos los contenedores.
+
 
 
