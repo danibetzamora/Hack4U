@@ -15,6 +15,8 @@ Una vez que se tiene el Dockerfile, se puede utilizar el comando `docker build` 
 
 - El parámetro `-t` permite indicar un nombre y una etiqueta a la imagen. 
 
+Además, si se añade algo nuevo al Dockerfile y se vuelve a hacer un `docker build`, Docker se encarga de cachear todo lo que ejecutó anteriormente y lleva a cabo únicamente las nuevas instrucciones que se hayan añadido.
+
 El comando `docker pull`  se utiliza para descargar una imagen de Docker desde un registro de imágenes.
 
 `docker pull nombre_de_la_imagen:etiqueta` - Ver ejemplo en [Comandos](#Comandos)
@@ -42,9 +44,31 @@ Para ejecutar comandos en un contenedor que ya está en ejecución, se utiliza e
 
 El **port forwarding** nos permitirá redirigir el tráfico de red desde un puerto específico en el host a un puerto específico en el contenedor, lo que nos permitirá acceder a los servicios que se ejecutan dentro del contenedor desde el exterior.
 
+Para este ejemplo, se procederá a montar un servidor **apache** dentro del contenedor, al cual se pretende acceder desde el host, redirigiendo la petición al contenedor gracias al **port forwarding**.
+
+Para crear un contenedor en el que se redirijan los puertos, se deberá usar el comando `run` con el parámetro `-p`. En la sección de [Comandos](#Comandos) se podrá ver el uso del comando con más detalle.
+
+Una vez creado, con el siguiente comando se podrá observar en el host que el puerto 80 está siendo usado por Docker. Por lo tanto, todas las peticiones que se hagan bajo ese puerto del host serán redirigidas al puerto 80 del contenedor.
+
+	lsof -i:80
+
+Después de esto, al acceder a la web desde el host, mediante *localhost*, o accediendo al equipo host desde otro equipo que esté en la misma red (a través de la IP del host e indicando el puerto) [192.168.1.64:80] se verá la página web por defecto de apache que está siendo enviada desde el contenedor.
+
+Es seguro hacer que los aplicativos se encuentren dentro del contenedor, ya que si un atacante lograse tener acceso a la máquina, estaría teniendo únicamente acceso al contenedor y no al host.
+
+Por ejemplo, si un atacante inyectase el siguiente fichero *php* en el servidor (el contenedor en este caso) podría llegar a ejecutar comandos de forma remota:
+
+	<?php
+        echo "<pre>" . shell_exec($_GET['cmd']) . "</pre>";
+	?>
+
+Con esta estructura se consigue que se muestre a través del navegador el resultado de ejecutar un comando en la shell y, este comando, ejecutará cualquier comando que se le indique a través del parámetro `cmd` que es obtenido mediante el método `GET`. Por lo que si en la URL se escribe <https://localhost/cmd.php?cmd=whoami> se obtendrá el resultado por pantalla de la ejecución del comando `whoami`.
+
 ### Monturas
 
 Las **monturas** nos permitirán compartir un directorio o archivo entre el sistema host y el contenedor, lo que será útil para guardar de forma persistente la información entre ejecuciones de contenedores y compartir datos entre diferentes contenedores.
+
+Tal y como se puede observar en la sección [Comandos](#Comandos), con el comando `run` y el parámetro `-v` se puede hacer que el host y el contenedor compartan un directorio. De esta manera, los ficheros que se encuentren en ese directorio del host estarán también en el directorio indicado del contenedor. Además, si se lleva a cabo una modificación desde el host de uno de los archivos, los cambios se realizarán también en los archivos del contenedor y viceversa.
 ## Comandos
 
 **Instalación de Docker**
@@ -83,6 +107,22 @@ En el siguiente comando se realiza lo mismo pero se usa la segunda versión de l
 
 	docker run -dit --name mySecondContainer my_first_image:v2
 
+**Creación de contenedor con redirección de puertos**
+
+	docker run -dit -p 80:80 --name myWebServer webserver
+
+**Creación de un contenedor con monturas**
+
+	docker run -dit -p 80:80 -v /home/dalnitak/docker/:/var/www/html/ --name myWebServer webserver
+
+**Visualización de los puertos de un contenedor**
+
+	docker port myWebServer
+
+**Visualización de los logs de un contenedor**
+
+	docker logs 4c8cc2efda27
+
 **Listado de los contenedores del sistema**
 
 	docker ps -a
@@ -116,6 +156,10 @@ En el siguiente comando se realiza lo mismo pero se usa la segunda versión de l
 **Borrado de todas las imágenes**
 
 	docker rmi $(docker images -q)
+
+**Borrado de imágenes "none"**
+
+	docker rmi $(docker images --filter "dangling=true" -q)
 
 **Borrado de un contenedor**
 
