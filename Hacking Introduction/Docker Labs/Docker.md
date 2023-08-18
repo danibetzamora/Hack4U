@@ -69,6 +69,71 @@ Con esta estructura se consigue que se muestre a través del navegador el result
 Las **monturas** nos permitirán compartir un directorio o archivo entre el sistema host y el contenedor, lo que será útil para guardar de forma persistente la información entre ejecuciones de contenedores y compartir datos entre diferentes contenedores.
 
 Tal y como se puede observar en la sección [Comandos](#Comandos), con el comando `run` y el parámetro `-v` se puede hacer que el host y el contenedor compartan un directorio. De esta manera, los ficheros que se encuentren en ese directorio del host estarán también en el directorio indicado del contenedor. Además, si se lleva a cabo una modificación desde el host de uno de los archivos, los cambios se realizarán también en los archivos del contenedor y viceversa.
+
+
+### Docker Compose - Despliegue de máquinas vulnerables
+
+A la hora de usar Docker, hay veces en las que se hace uso de muchos parámetros, es por eso que existen herramientas como **Docker Compose**, la cual permite definir todos los parámetros y configuraciones necesarias en un archivo con extensión *.yml*. 
+
+En este apartado se llevará a cabo el despliegue de máquinas vulnerables haciendo uso de **Docker Compose**. Las máquinas vulnerables están disponibles en el siguiente repositorio: [vulhub](https://github.com/vulhub/vulhub).
+
+La primera vulnerabilidad se trata de una versión de **_kibana_** la cual es vulnerable al **Local File Inclusion** (LFI) y derivable a un **Remote File Inclusion** (RFI).
+
+De la siguiente manera se puede clonar una subcarpeta de un repositorio de GitHub:
+
+La URL original de la subcarpeta que se quiere clonar es la siguiente:
+
+<https://github.com/vulhub/vulhub/tree/master/kibana/CVE-2018-17246> 
+
+Sin embargo, sustituyendo la parte de la URL en la que pone *"/tree/master/"* por *"/trunk/"*, y usando el siguiente comando, se podrá clonar esa subcarpeta:
+
+	svn checkout https://github.com/vulhub/vulhub/trunk/kibana/CVE-2018-17246
+
+Una vez clonada la subcarpeta, solo se deberá ejecutar el comando de **Docker Compose** que se indica en la explicación:
+
+	docker-compose up -d
+
+En caso de que al ejecutar este comando no se creen correctamente los dos contenedores correspondientes (el de kibana y el de elasticsearch), se deberá usar el siguiente comando:
+
+	sudo sysctl -w vm.max_map_count=262144
+
+Este comando es necesario, debido a que aplicaciones y servicios como *Elasticsearch* necesitan una cantidad mayor de áreas de mapeo de memoria para funcionar de forma eficiente. Es decir, el valor por defecto del parámetro *"vm.max_map_count"* es insuficiente para que el servicio de *Elasticsearch* pueda trabajar de forma eficiente y acceder a los datos de memoria sin ningún problema. Es por eso que mediante ese comando se aumenta el número de regiones de mapeo de memoria.
+
+A continuación, y una vez creados los contenedores (siendo accesible el servicio de kibana de la siguiente manera: <http://localhost:5061>), se podrá ejecutar el siguiente comando para abusar del LFI:
+
+	curl -s -X GET "http://localhost:5601/api/console/api_server?sense_version=%40%40SENSE_VERSION&apis=../../../../../../../../../../../etc/passwd"
+
+- El parámetro `-s` se usa para que la ejecución sea silenciosa y no muestre texto por pantalla.
+- El parámetro `-X` indica el tipo de método HTTP que será usado.
+
+Como resultado de la ejecución del comando aparece un error del servidor. Sin embargo, si se visualizan los logs con el siguiente comando, se podrá visualizar el contenido del fichero */etc/passwd/"*:
+
+	docker-compose logs
+
+De esta manera, se ha demostrado que se puede acceder a un fichero del sistema apuntando a él a través del LFI. Por eso mismo, ahora se deberá insertar un archivo malicioso en el sistema (se ha de suponer que a través de cierta vulnerabilidad se ha logrado introducir dicho archivo en el contenedor), para después mediante el LFI apuntar a ese archivo *javascript* malicioso y que se ejecute, llegando a poder ejecutar comandos de forma remota y habiendo derivado este LFI en un RFI.
+
+Con el siguiente comando se puede acceder a la ejecución de comandos en el contenedor y poder introducir el fichero malicioso:
+
+	docker-compose exec kibana bash
+
+El fichero *javascript* puede encontrarse en el siguiente repositorio: [Node Reverse Shell](https://github.com/appsecco/vulnerable-apps/tree/master/node-reverse-shell).
+
+En caso de no poder instalar *nano* para crear el fichero en el contenedor, se deberá borrar el contenido del fichero *"/etc/apt/sources.list/"*, e incluir la siguiente línea: "deb http://archive.debian.org/debian/ jessie contrib main non-free".
+
+Si dicho fichero se consiguiera subir al contenedor, y ser apuntado y ejecutado mediante el LFI, básicamente trataría de ejecutar una *Reverse Shell* (una consola de ejecución de comandos enviada por el contenedor al atacante), enviándola a un puerto de una IP dada.
+
+Por lo tanto, sería necesario ponerse en escucha en dicho puerto, haciendo uso de *netcat*, de la siguiente forma:
+
+	nc -nlvp 443
+
+El comando `nc`, así como los parámetros usados, será explicado más adelante en los siguientes temas. Pero, básicamente, hace que nos pongamos en escucha por el puerto especificado.
+
+De esta forma, y cambiando la ruta en el comando `curl` (especificando el archivo *"/tmp/reverse.js/"* en lugar del *"/etc/passwd/"*), habremos ganado acceso a una consola interactiva en el equipo atacante.
+
+Con el siguiente comando se puede visualizar la consola de una forma más visual y entendible:
+
+	script /dev/null -c bash
+
 ## Comandos
 
 **Instalación de Docker**
