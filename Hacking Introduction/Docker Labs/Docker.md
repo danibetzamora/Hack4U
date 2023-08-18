@@ -79,11 +79,7 @@ En este apartado se llevará a cabo el despliegue de máquinas vulnerables hacie
 
 La primera vulnerabilidad se trata de una versión de **_kibana_** la cual es vulnerable al **Local File Inclusion** (LFI) y derivable a un **Remote File Inclusion** (RFI).
 
-De la siguiente manera se puede clonar una subcarpeta de un repositorio de GitHub:
-
-La URL original de la subcarpeta que se quiere clonar es la siguiente:
-
-<https://github.com/vulhub/vulhub/tree/master/kibana/CVE-2018-17246> 
+La URL original de la subcarpeta que se quiere clonar es la siguiente: <https://github.com/vulhub/vulhub/tree/master/kibana/CVE-2018-17246> 
 
 Sin embargo, sustituyendo la parte de la URL en la que pone *"/tree/master/"* por *"/trunk/"*, y usando el siguiente comando, se podrá clonar esa subcarpeta:
 
