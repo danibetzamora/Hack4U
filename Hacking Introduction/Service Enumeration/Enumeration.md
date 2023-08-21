@@ -42,7 +42,7 @@ A continuación, se hará uso de **hydra**, que es una herramienta muy potente p
 
 En la siguiente imagen se puede visualizar el resultado de la ejecución:
 
-![[hydra.png]]
+![hydra](https://github.com/danibetzamora/Hack4U/assets/72496191/3b7babd6-73d6-4d01-bb31-1e0811e00ba3)
 
 Para el siguiente caso práctico se hará uso del siguiente repositorio: [Docker-ANON-FTP](https://github.com/metabrainz/docker-anon-ftp).
 
@@ -54,5 +54,4 @@ Con el siguiente comando se creará el contenedor:
 
 Si ahora se vuelve a hacer el mismo escaneo que se hizo antes con **nmap**, los scripts básicos de nmap reportarán que existe un usuario *anonymous*:
 
-![[2023-08-21_11-40.png]]
-
+![anon](https://github.com/danibetzamora/Hack4U/assets/72496191/b175c64c-bd6d-4c0a-8297-b8abbd1ac1ae)
