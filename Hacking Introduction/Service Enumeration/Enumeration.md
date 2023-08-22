@@ -126,3 +126,49 @@ Y,  lanzando los scripts básicos de nmap de la siguiente forma, obtenemos los r
 Teniendo esto, con una búsqueda en Google obtendremos el *codename* de la distribución. Por ejemplo: **_OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 launchpad_**. En este caso, el *codename* de la distribución de Ubuntu es **trusty**.
 
 
+## Enumeración del servicio HTTP y HTTPS
+
+**HTTP** (**Hypertext Transfer Protocol**) es un protocolo de comunicación utilizado para la transferencia de datos en la World Wide Web. Se utiliza para la transferencia de contenido de texto, imágenes, videos, hipervínculos, etc. El puerto predeterminado para HTTP es el puerto 80.
+
+**HTTPS** (**Hypertext Transfer Protocol Secure**) es una **versión segura** de HTTP que utiliza SSL / TLS para cifrar la comunicación entre el cliente y el servidor. Utiliza el puerto 443 por defecto. La principal diferencia entre HTTP y HTTPS es que HTTPS utiliza una capa de seguridad adicional para cifrar los datos, lo que los hace más seguros para la transferencia.
+
+Con el siguiente comando se puede visualizar el certificado de una página web HTTPS desde consola:
+
+	openssl s_client -connect ejemplo.com:443
+
+Por otro lado, **SSLScan** es una herramienta de análisis de seguridad SSL que se utiliza para evaluar la configuración SSL de un servidor. A continuación puede visualizarse un ejemplo de su uso:
+
+	sslscan ejemplo.com
+
+Como herramienta adicional para el análisis de la configuración SSL de un servidor existe la herramienta **Sslyze**.
+
+### Heartbleed
+
+**Heartbleed** es una vulnerabilidad de seguridad que afecta a la biblioteca OpenSSL y permite a los atacantes acceder a la memoria de un servidor vulnerable. Si un servidor web es vulnerable a Heartbleed y lo detectamos a través de estas herramientas, esto significa que un atacante podría potencialmente acceder a información confidencial, como claves privadas, nombres de usuario y contraseñas, etc.
+
+A continuación se desplegará un laboratorio de Docker vulnerable a Heartbleed a modo de demostración. El laboratorio podrá ser clonado desde el siguiente repositorio: [Heartbleed](https://github.com/vulhub/vulhub/tree/master/openssl/CVE-2014-0160).
+
+Una vez desplegado el laboratorio, si ejecutamos el siguiente comando podremos observar que la herramienta detecta que el certificado de la web es vulnerable a *heartbleed*:
+
+	sslscan 127.0.0.1:8443
+
+- En este caso se indica el puerto `8443` porque es el puerto especificado en el archivo "*docker-compose.yml*".
+
+De la misma manera, mediante nmap y uno de sus scripts de reconocimiento, puede identificarse si el servidor es vulnerable a *heartbleed*:
+
+	nmap --script ssl-heartbleed -p8443 127.0.0.1
+
+Una de las formas de abusar de esta vulnerabilidad es hacer uso del script en python que se encuentra en el repositorio, de la siguiente forma:
+
+	python3 ssltest.py 127.0.0.1 -p 8443 | grep -v "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+
+
+
+
+
+
+
+
+
+
+
