@@ -95,7 +95,7 @@ La forma de usar **hydra** para obtener la contraseña del servidor SSH, mediant
 
 - En este caso, con el parámetro `-s` se indica el puerto a usar.
 
-*Imagen*
+![hydra-ssh](https://github.com/danibetzamora/Hack4U/assets/72496191/6a912fbf-df30-440b-9c56-08c5d502afaf)
 
 Por otro lado, podríamos identificar el *codename* de la distribución que se está ejecuntando en el sistema. Para ello será necesario crear un Dockerfile básico, construir la imagen, y crear el contenedor. El Dockerfile tendrá el siguiente aspecto:
 
@@ -106,7 +106,7 @@ MAINTAINER Daniel Betancor aka dalnitak
 
 EXPOSE 22
 
-run apt update && apt install ssh -y 
+RUN apt update && apt install ssh -y 
 
 ENTRYPOINT service ssh start && /bin/bash
 ```
@@ -121,7 +121,7 @@ Y,  lanzando los scripts básicos de nmap de la siguiente forma, obtenemos los r
 
 	nmap -sCV -p22 127.0.0.1
 
-*Imagen*
+![codename](https://github.com/danibetzamora/Hack4U/assets/72496191/38c63b93-844f-4c71-82eb-6b18117a56b3)
 
 Teniendo esto, con una búsqueda en Google obtendremos el *codename* de la distribución. Por ejemplo: **_OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.13 launchpad_**. En este caso, el *codename* de la distribución de Ubuntu es **trusty**.
 
