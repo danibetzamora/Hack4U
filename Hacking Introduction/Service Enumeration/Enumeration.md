@@ -4,11 +4,11 @@ El **File Transfer Protocol** (FTP) trabaja bajo el puerto **21**.
 
 La enumeración del servicio FTP implica recopilar información relevante, como la versión del servidor FTP, la configuración de permisos de archivos, los usuarios y las contraseñas (mediante ataques de fuerza bruta o guessing), entre otros.
 
-Existen dos formas de acceder a los recursos suministrados mediante FTP. En el primer caso, bastará con introducir el usuario *anonymous* sin contraseña para poder acceder a los recursos. Sin embargo, existe la posibilidad de necesitar un usuario y una contraseña para acceder a los ficheros listados mediante FTP.
+Existen dos formas de acceder a los recursos suministrados mediante FTP. En el primer caso, bastará con introducir el usuario *anonymous*, sin contraseña, para poder acceder a los recursos. Sin embargo, existe la posibilidad de necesitar un usuario y una contraseña para acceder a los ficheros listados mediante FTP.
 
 Para llevar a cabo esta práctica, se hará uso del siguiente repositorio, mediante el cual se podrá montar un contenedor de Docker que disponga de un servicio FTP: [Docker-FTP-Server](https://github.com/garethflowers/docker-ftp-server).
 
-Además, se hará uso de un diccionario para realizar un ataque de fuerza bruta y obtener la contraseña del usuario con acceso al servicio FTP. Uno de los diccionarios que pueden ser usados es el **rockyou** ("/usr/share/wordlists/rockyou.txt"). De la siguiente manera podemos obtener una línea concreta del diccionario:
+Además, se hará uso de un diccionario para realizar un ataque de fuerza bruta y obtener la contraseña del usuario con acceso al servicio FTP. Uno de los diccionarios que pueden ser usados es el **rockyou** ("/usr/share/wordlists/rockyou.txt/"). De la siguiente manera podemos obtener una línea concreta del diccionario:
 
 	cat /usr/share/wordlists/rockyou.txt | awk "NR==132"
 
@@ -161,6 +161,54 @@ De la misma manera, mediante nmap y uno de sus scripts de reconocimiento, puede 
 Una de las formas de abusar de esta vulnerabilidad es hacer uso del script en python que se encuentra en el repositorio, de la siguiente forma:
 
 	python3 ssltest.py 127.0.0.1 -p 8443 | grep -v "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+
+
+## Enumeración del servicio SMB
+
+**SMB** significa **Server Message Block**, es un **protocolo** de comunicación de red utilizado para compartir archivos, impresoras y otros recursos entre dispositivos de red. Es un protocolo de **Microsoft** que se utiliza en sistemas operativos **Windows**.
+
+**Samba**, por otro lado, es una implementación libre y de código abierto del **protocolo SMB**, que se utiliza principalmente en sistemas operativos basados en **Unix** y **Linux**. Samba proporciona una manera de compartir archivos y recursos entre dispositivos de red que ejecutan sistemas operativos diferentes, como Windows y Linux.
+
+En esta ocasión se hará uso del siguiente repositorio de GitHub, el cual contiene el laboratorio vulnerable para montar un servidor samba: [Samba Authenticated RCE](https://github.com/vulhub/vulhub/tree/master/samba/CVE-2017-7494).
+
+La finalidad principal es enumerar correctamente este servicio, para detectar vulnerabilidades que puedan ser explotadas posteriormente.
+
+Una vez desplegado el laboratorio, si a través de nmap se detecta que el puerto 445 está abierto (puerto correspondiente a SMB), se puede empezar la numeración con **smbclient**. Esta herramienta permite listar los recursos compartidos existentes a nivel de red. A continuación se muestra un ejemplo de uso:
+
+	smbclient -L 127.0.0.1 -N
+
+- El parámetro `-L` indica que se quiere listar todo recurso existente.
+- El parámetro `-N` se usa cuando no se dispone de credenciales válidas (sesión nula).
+
+Además de estos parámetros, también son comunes los siguientes con smbclient:
+
+- **-U**: Este parámetro se utiliza para especificar el nombre de usuario y la contraseña utilizados para la autenticación con el servidor SMB o Samba.
+- **-c**: Este parámetro se utiliza para especificar un comando que se ejecutará en el servidor SMB o Samba.
+
+De forma alternativa existe **smbmap**. Smbmap es una herramienta de línea de comandos utilizada para enumerar recursos compartidos y permisos en un servidor SMB (Server Message Block) o Samba. Es una herramienta muy útil para la enumeración de redes y para la identificación de posibles vulnerabilidades de seguridad.
+
+A continuación se muestra el uso de algunos de sus parámetros:
+
+- **-H**: Este parámetro se utiliza para especificar la dirección IP o el nombre de host del servidor SMB al que se quiere conectarse.
+- **-P**: Este parámetro se utiliza para especificar el puerto TCP utilizado para la conexión SMB. El puerto predeterminado para SMB es el 445, pero si el servidor SMB está configurado para utilizar un puerto diferente, este parámetro debe ser utilizado para especificar el puerto correcto.
+- **-u**: Este parámetro se utiliza para especificar el nombre de usuario para la conexión SMB.
+- **-p**: Este parámetro se utiliza para especificar la contraseña para la conexión SMB.
+- **-d**: Este parámetro se utiliza para especificar el dominio al que pertenece el usuario que se está utilizando para la conexión SMB.
+- **-s**: Este parámetro se utiliza para especificar el recurso compartido específico que se quiere enumerar. Si no se especifica, smbmap intentará enumerar todos los recursos compartidos en el servidor SMB.
+
+En el caso práctico, se encontró una carpeta llamada "**myshare**" con capacidad de lectura y escritura, por lo que podríamos conectarnos a ella mediante smbclient de la siguiente forma:
+
+	smbclient //127.0.0.1/myshare -N
+
+- Ya conectados podríamos ejecutar comandos propios de SMB, como `put`, `get`, `dir`...
+
+Sin embargo, el problema es que si accediéramos a un servidor SMB en el que hubieran muchos directorios y archivos, sería muy complicado navegar entre ellos. Por eso mismo, si montamos la carpeta del servidor SMB en nuestro equipo local con el siguiente comando, tendremos un acceso mucho más sencillo a todos los recursos:
+
+	mount -t cifs //127.0.0.1/myshare /mnt/mounted
+
+Para desmontarlo, simplemente se deberá hacer lo siguiente:
+
+	umount /mnt/mounted
 
 
 
