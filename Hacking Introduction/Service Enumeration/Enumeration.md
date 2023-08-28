@@ -249,7 +249,7 @@ A continuación se hace uso de la utilidad '**searchsploit**', la cual está sin
 
 - De esta forma se podría buscar en la base de datos exploits que permitan enumerar los usuarios relacionados con una página WordPress.
 
-*Imagen*
+![searchsploit](https://github.com/danibetzamora/Hack4U/assets/72496191/a75341d1-3fd9-4da6-98d3-80290e2f78dd)
 
 Con **searchsploit** se pueden examinar los archivos en los que se encuentran los exploits de la siguiente manera:
 
@@ -308,7 +308,7 @@ Sin embargo, este archivo también puede ser abusado por atacantes malintenciona
 
 Por lo que, antes que nada, será necesario ver si el archivo *xmlrpc.php* está expuesto o no. Simplemente se deberá buscar la siguiente URL: <http://localhost:31337/xmlrpc.php/>.
 
-*Imagen*
+![xmlrpc](https://github.com/danibetzamora/Hack4U/assets/72496191/ec01bffa-b388-4fac-b6d7-c67cf0e2f4c9)
 
 Como se puede observar en la imagen, el servidor solo acepta peticiones por **POST**. Por eso mismo, se deberá realizar una petición por POST de la siguiente manera:
 
