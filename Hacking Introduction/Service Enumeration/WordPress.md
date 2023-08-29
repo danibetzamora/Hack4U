@@ -2,7 +2,11 @@
 
 **WordPress** es uno de los gestores de contenido (CMS) más famosos en la actualidad. A lo largo de este apartado se estudiará como enumerarlo.
 
-En primer lugar, se procederá con la clonación del siguiente repositorio: [DVWP](https://github.com/vavkamil/dvwp). En este repositorio se encuentra el proyecto que se utilizará para enumerar WordPress.
+En primer lugar, se procederá con la clonación del siguiente repositorio:
+
+- **DVWP**: [https://github.com/vavkamil/dvwp](https://github.com/vavkamil/dvwp)
+
+En este repositorio se encuentra el proyecto que se utilizará para enumerar WordPress.
 
 Una vez clonado, se deberá ejecutar el siguiente comando de **docker-compose** para crear el contenedor:
 
@@ -73,7 +77,9 @@ También, con esta herramienta puede hacerse uso de un diccionario para realizar
 
 ### Escaneo de plugins manual
 
-Existe una forma de enumerar los plugins de forma manual. En el siguiente directorio de **Wordpress** se deberían listar todos los plugins que están siendo usados en un directorio (Directory Listing): <http://localhost:31337/wp-content/plugins/>. 
+Existe una forma de enumerar los plugins de forma manual. En el siguiente directorio de **Wordpress** se deberían listar todos los plugins que están siendo usados en un directorio (Directory Listing): 
+
+- **Plugins Directory**: [http://localhost:31337/wp-content/plugins/](http://localhost:31337/wp-content/plugins/ )
 
 Sin embargo, en el ejemplo práctico, esta ruta no mostraba nada a través del navegador. En caso de que ocurra esto, se podría obtener información de esta ruta haciendo una petición mediante el método **GET** del protocolo **HTTP** con el comando `curl`, de la siguiente manera:
 
@@ -93,7 +99,9 @@ El archivo xmlrpc.php es utilizado por muchos plugins y aplicaciones móviles de
 
 Sin embargo, este archivo también puede ser abusado por atacantes malintencionados para aplicar **fuerza bruta** y descubrir **credenciales válidas** de los usuarios del sitio. Esto se debe a que xmlrpc.php permite a los atacantes realizar un número ilimitado de solicitudes de inicio de sesión sin ser bloqueados, lo que hace que la ejecución de un ataque de fuerza bruta sea relativamente sencilla.
 
-Por lo que, antes que nada, será necesario ver si el archivo *xmlrpc.php* está expuesto o no. Simplemente se deberá buscar la siguiente URL: <http://localhost:31337/xmlrpc.php/>.
+Por lo que, antes que nada, será necesario ver si el archivo *xmlrpc.php* está expuesto o no. Simplemente se deberá buscar la siguiente URL: 
+
+- **Archivo XMLRPC**: [http://localhost:31337/xmlrpc.php/](http://localhost:31337/xmlrpc.php/)
 
 ![xmlrpc](https://github.com/danibetzamora/Hack4U/assets/72496191/ec01bffa-b388-4fac-b6d7-c67cf0e2f4c9)
 
@@ -132,4 +140,6 @@ Sabiendo esto, podemos hacer uso de la siguiente estructura de XML, en la cual s
 </methodCall>
 ```
 
-De esta manera, podría realizarse un script en bash que permita aplicar fuerza bruta, haciendo uso de esta estructura XML, para obtener las credenciales de administrador de un sitio web hecho con Wordpress. Dejo el enlace directo al script en cuestión: [Fuerza Bruta Wordpress - Bash Script](./Scripts/xmlrpc_bruteforce.sh).
+De esta manera, podría realizarse un script en bash que permita aplicar fuerza bruta, haciendo uso de esta estructura XML, para obtener las credenciales de administrador de un sitio web hecho con Wordpress. Dejo el enlace directo al script en cuestión: 
+
+- **Script en Bash para aplicar _Fuerza Bruta_**: [xmlrpc_bruteforce.sh](./Scripts/xmlrpc_bruteforce.sh)

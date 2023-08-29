@@ -6,7 +6,9 @@ La enumeración del servicio FTP implica recopilar información relevante, como 
 
 Existen dos formas de acceder a los recursos suministrados mediante FTP. En el primer caso, bastará con introducir el usuario *anonymous*, sin contraseña, para poder acceder a los recursos. Sin embargo, existe la posibilidad de necesitar un usuario y una contraseña para acceder a los ficheros listados mediante FTP.
 
-Para llevar a cabo esta práctica, se hará uso del siguiente repositorio, mediante el cual se podrá montar un contenedor de Docker que disponga de un servicio FTP: [Docker-FTP-Server](https://github.com/garethflowers/docker-ftp-server).
+Para llevar a cabo esta práctica, se hará uso del siguiente repositorio, mediante el cual se podrá montar un contenedor de Docker que disponga de un servicio FTP:
+
+- **Docker FTP Server**: [https://github.com/garethflowers/docker-ftp-server](https://github.com/garethflowers/docker-ftp-server)
 
 Además, se hará uso de un diccionario para realizar un ataque de fuerza bruta y obtener la contraseña del usuario con acceso al servicio FTP. Uno de los diccionarios que pueden ser usados es el **rockyou** ("/usr/share/wordlists/rockyou.txt/"). De la siguiente manera podemos obtener una línea concreta del diccionario:
 
@@ -46,7 +48,9 @@ En la siguiente imagen se puede visualizar el resultado de la ejecución:
 
 ![hydra](https://github.com/danibetzamora/Hack4U/assets/72496191/3b7babd6-73d6-4d01-bb31-1e0811e00ba3)
 
-Para el siguiente caso práctico se hará uso del siguiente repositorio: [Docker-ANON-FTP](https://github.com/metabrainz/docker-anon-ftp).
+Para el siguiente caso práctico se hará uso del siguiente repositorio: 
+
+- **Docker ANON FTP**: [https://github.com/metabrainz/docker-anon-ftp](https://github.com/metabrainz/docker-anon-ftp)
 
 En este caso, se trata de enumerar un servicio FTP que disponga de un usuario invitado *anonymous* sin contraseña.
 
@@ -58,12 +62,15 @@ Si ahora se vuelve a hacer el mismo escaneo que se hizo antes con **nmap**, los 
 
 ![anon](https://github.com/danibetzamora/Hack4U/assets/72496191/b175c64c-bd6d-4c0a-8297-b8abbd1ac1ae)
 
-
 ## Enumeración del servicio SSH
 
 **Secure Shell** (SSH) es un protocolo de administración remota que permite a los usuarios controlar y modificar sus servidores remotos a través de Internet mediante un mecanismo de autenticación seguro. Como una alternativa más segura al protocolo **Telnet**, que transmite información sin cifrar, SSH utiliza técnicas criptográficas para garantizar que todas las comunicaciones hacia y desde el servidor remoto estén cifradas.
 
-Para este ejemplo práctico usaremos la siguiente página web: [OpenSSH-Server](https://hub.docker.com/r/linuxserver/openssh-server). En ella se indica el comando de Docker que debemos ejecutar para desplegar un servidor SSH en nuestra máquina. El comando en cuestión es el siguiente:
+Para este ejemplo práctico usaremos la siguiente página web: 
+
+- **OpenSSH Server**: [https://hub.docker.com/r/linuxserver/openssh-server](https://hub.docker.com/r/linuxserver/openssh-server)
+ 
+En ella se indica el comando de Docker que debemos ejecutar para desplegar un servidor SSH en nuestra máquina. El comando en cuestión es el siguiente:
 
 ```bash
 docker run -d \
@@ -146,7 +153,9 @@ Como herramienta adicional para el análisis de la configuración SSL de un serv
 
 **Heartbleed** es una vulnerabilidad de seguridad que afecta a la biblioteca OpenSSL y permite a los atacantes acceder a la memoria de un servidor vulnerable. Si un servidor web es vulnerable a Heartbleed y lo detectamos a través de estas herramientas, esto significa que un atacante podría potencialmente acceder a información confidencial, como claves privadas, nombres de usuario y contraseñas, etc.
 
-A continuación se desplegará un laboratorio de Docker vulnerable a Heartbleed a modo de demostración. El laboratorio podrá ser clonado desde el siguiente repositorio: [Heartbleed](https://github.com/vulhub/vulhub/tree/master/openssl/CVE-2014-0160).
+A continuación se desplegará un laboratorio de Docker vulnerable a Heartbleed a modo de demostración. El laboratorio podrá ser clonado desde el siguiente repositorio: 
+
+- **Heartbleed**: [https://github.com/vulhub/vulhub/tree/master/openssl/CVE-2014-0160](https://github.com/vulhub/vulhub/tree/master/openssl/CVE-2014-0160)
 
 Una vez desplegado el laboratorio, si ejecutamos el siguiente comando podremos observar que la herramienta detecta que el certificado de la web es vulnerable a *heartbleed*:
 
@@ -162,14 +171,15 @@ Una de las formas de abusar de esta vulnerabilidad es hacer uso del script en py
 
 	python3 ssltest.py 127.0.0.1 -p 8443 | grep -v "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
 
-
 ## Enumeración del servicio SMB
 
 **SMB** significa **Server Message Block**, es un **protocolo** de comunicación de red utilizado para compartir archivos, impresoras y otros recursos entre dispositivos de red. Es un protocolo de **Microsoft** que se utiliza en sistemas operativos **Windows**.
 
 **Samba**, por otro lado, es una implementación libre y de código abierto del **protocolo SMB**, que se utiliza principalmente en sistemas operativos basados en **Unix** y **Linux**. Samba proporciona una manera de compartir archivos y recursos entre dispositivos de red que ejecutan sistemas operativos diferentes, como Windows y Linux.
 
-En esta ocasión se hará uso del siguiente repositorio de GitHub, el cual contiene el laboratorio vulnerable para montar un servidor samba: [Samba Authenticated RCE](https://github.com/vulhub/vulhub/tree/master/samba/CVE-2017-7494).
+En esta ocasión se hará uso del siguiente repositorio de GitHub, el cual contiene el laboratorio vulnerable para montar un servidor samba: 
+
+- **Samba Authenticated RCE**: [https://github.com/vulhub/vulhub/tree/master/samba/CVE-2017-7494](https://github.com/vulhub/vulhub/tree/master/samba/CVE-2017-7494)
 
 La finalidad principal es enumerar correctamente este servicio, para detectar vulnerabilidades que puedan ser explotadas posteriormente.
 
